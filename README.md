@@ -153,67 +153,110 @@ void addEmployee(struct Employee *employees, int *numEmployees){
             }
 
 //FUNCTION FOR SEARCHING AN EMPLOYEE
-void searchEmployee(struct Employee *employees, int numEmployees){
+void searchEmployee(struct Employee* employees, int numEmployees) {
+    int choice;                 // Variable to store the user's choice for the search method.
+    char searchString[50];      // Array to store the search string entered by the user.
+    int found = 0;              // Variable to track whether an employee matching the search criteria is found.
+    int searchID;               // Variable to store the employee ID entered for searching.
+    float minSalary;            // Variable to store the minimum salary entered for searching.
+    system("cls");
+    printf("\n                                     +=========================================================================+");
+    printf("\n                                     |                                                                         |");
+    printf("\n                                     |                                                                         |");
+    printf("\n                                     |                          PLEASE SEARCH THE EMPLOYEE                     |");
+    printf("\n                                     |                                                                         |");
+    printf("\n                                     |                                                                         |");
+    printf("\n                                     +=========================================================================+");
+    printf("Search Employee by:\n");
+    printf("1. Name\n");
+    printf("2. ID\n");
+    printf("3. Position\n");
+    printf("4. Salary\n");
+    printf("5. Department\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
 
-                int searchID;
-
-                system("cls");
-
-                printfEmployeeRecordSystem();
-
-                printf("\n\n\n\n\n\t\t\t\t\t\t\t\tEnter ID of employee to search for: ");
-                scanf("%d", &searchID);
-
-                int found = 0;
-                do {
-
-                    // Search for the employee with the given ID
-                    for (int i = 0; i < numEmployees; i++) {
-                        if (employees[i].id == searchID) {
-
-                            // Print the employee details if found
-                            printf("\n\n\n\n\n\t\t\t\t\t\t-----------------------------------------------------------------------------------\n");
-                            printf("\n\t\t\t\t\t\t| %-12s | %-15s | %-15s | %-15s | %-10s |\n", "Employee ID", "Name", "Department", "Position", "Salary");
-                            printf("\n\t\t\t\t\t\t-----------------------------------------------------------------------------------\n");
-                            printf("\n\t\t\t\t\t\t| %-12d | %-15s | %-15s | %-15s | $%-9.2f |\n", employees[i].id, employees[i].name, employees[i].department, employees[i].position, employees[i].salary);
-                            printf("\n\t\t\t\t\t\t-----------------------------------------------------------------------------------\n");
-
-                            found = 1; // Set found flag to true
-                            break; // Exit the loop since the employee is found
-                        }
-                    }
-
-                    // If the employee is not found
-                    if (!found)
-                        {
-                        printf("\n\t\t\t\t\t\t\tEmployee with ID %d not found.\n", searchID);
-
-                        char tryAgain;
-
-                        printf("\n\t\t\t\t\t\t\tDo you want to search again? (Y/N): ");
-                        scanf(" %c", &tryAgain);
-
-                        // If the user does not want to search again, exit the loop
-                        if (tryAgain == 'N' || tryAgain == 'n')
-                            {
-                            break;
-                            }
-                            else
-                                {
-
-                                // Prompt the user to enter another ID
-                                printf("\n\n\n\n\n\t\t\t\t\t\t\t\tEnter ID of the employee to search for: ");
-                                scanf("%d", &searchID);
-                                }
-                        }
+    switch (choice) {
+        case 1:
+            printf("\nEnter the name of the employee to search for: ");
+            scanf(" %[^\n]s", searchString);
+            toLowerCase(searchString);
+            getchar();
+            break;
+        case 2:
+            printf("\nEnter the ID of the employee to search for: ");
+            scanf("%d", &searchID);
+            getchar();
+            break;
+        case 3:
+            printf("\nEnter the position of the employee to search for: ");
+            scanf(" %[^\n]s", searchString);
+            toLowerCase(searchString);
+            getchar();
+            break;
+        case 4:
+            printf("\nEnter the minimum salary: ");
+            scanf("%f", &minSalary);
+            getchar();
+            break;
+        case 5:
+            printf("\nEnter the department of the employee to search for: ");
+            scanf(" %[^\n]s", searchString);
+            toLowerCase(searchString);
+            getchar();
+            break;
+        default:
+            printf("\nInvalid choice.\n");
+            return;
+    }
+    for (int i = 0; i < numEmployees; i++) {
+        struct Employee currentEmployee = employees[i];
+        switch (choice) {
+            case 1: // Search by Name
+                if (strcasecmp(currentEmployee.name, searchString) == 0) {
+                    printEmployeeDetails(currentEmployee);
+                    found = 1;
+                    break;
                 }
+                break;
+            case 2: // Search by ID
+                if (currentEmployee.id == searchID) {
+                    printEmployeeDetails(currentEmployee);
+                    found = 1;
+                    break;
+                }
+                break;
+            case 3: // Search by Position
+                if (strcasecmp(currentEmployee.position, searchString) == 0) {
+                    printEmployeeDetails(currentEmployee);
+                    found = 1;
+                    break;
+                }
+                break;
+            case 4: // Search by Salary
+                if (currentEmployee.salary >= minSalary) {
+                    printEmployeeDetails(currentEmployee);
+                    found = 1;
+                    break;
+                }
+                break;
+            case 5: // Search by Department
+                if (strcasecmp(currentEmployee.department, searchString) == 0) {
+                    printEmployeeDetails(currentEmployee);
+                    found = 1;
+                    break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
-                while (!found);
-
-                printf("\n\n\t\t\t\t\t\t\tPress Enter to continue...");
-                getchar();
-                getchar();
-            }
+    if (!found) {
+        printf("\nNo employees found matching the search criteria.\n");
+    }
+            getchar();
+}
 
 //FUNCTION FOR DELETING A EMPLOYEE
 void archieveEmployee(struct Employee *employees, int *numEmployees){
